@@ -9,7 +9,6 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aulas.entidades.Contato;
@@ -58,13 +57,9 @@ public class ContatoService {
 	public ContatoDTO alterarContato(Long idcontato, Contato contato) {
 		Contato ct = consultarContato(idcontato);
 		BeanUtils.copyProperties(contato, ct, "id");
-		/*ct.setEmail(contato.getEmail());
-		ct.setNome(contato.getNome());
-		ct.setFone(contato.getFone());	*/	
 		return new ContatoDTO(repo.save(ct));
 	}
 	
-	@Transactional(readOnly = true)
 	private  Contato consultarContato(Long idcontato) {
 		   Optional<Contato> opcontato = repo.findById(idcontato);
 		   Contato ct = opcontato.orElseThrow(() -> new EntityNotFoundException("Contato não encontrado"));
@@ -73,7 +68,6 @@ public class ContatoService {
 	
 	@Transactional
 	public void excluirContato(Long idcontato) {
-		//Contato ct = consultarContato(idcontato);
 		repo.deleteById(idcontato);	
 	}
 	
