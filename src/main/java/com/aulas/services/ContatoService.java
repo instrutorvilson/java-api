@@ -9,6 +9,7 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.aulas.entidades.Contato;
@@ -20,7 +21,7 @@ public class ContatoService {
 	@Autowired
     ContatoRepository repo;
 
-	
+	@Transactional
 	public ContatoDTO salvar(Contato contato) {	
 		/*if(contato.getFone().length() != 14) {
 			throw new ValidacaoException("Telefone inválido");
@@ -36,6 +37,7 @@ public class ContatoService {
 		
 	}	
 	
+	@Transactional( readOnly = true)
 	public List<ContatoDTO> consultarContatos(){
 	    List<Contato> contatos = repo.findAll();
 	    List<ContatoDTO> contatosDTO = new ArrayList();
@@ -45,12 +47,14 @@ public class ContatoService {
 		return contatosDTO;
 	}
 	
+	@Transactional( readOnly = true)
 	public  ContatoDTO consultarContatoPorId(Long idcontato) {
 	   Optional<Contato> opcontato = repo.findById(idcontato);
 	   Contato ct = opcontato.orElseThrow(() -> new EntityNotFoundException("Contato não encontrado"));
 	   return new ContatoDTO(ct);
 	}
 	
+	@Transactional
 	public ContatoDTO alterarContato(Long idcontato, Contato contato) {
 		Contato ct = consultarContato(idcontato);
 		BeanUtils.copyProperties(contato, ct, "id");
@@ -67,11 +71,13 @@ public class ContatoService {
 		   return ct;
 	}
 	
+	@Transactional
 	public void excluirContato(Long idcontato) {
 		//Contato ct = consultarContato(idcontato);
 		repo.deleteById(idcontato);	
 	}
 	
+	@Transactional
 	public List<ContatoDTO> consultarContatoPorEmail(String email) {
 		return ContatoDTO.converteParaDTO(repo.findByEmail(email));
 	}

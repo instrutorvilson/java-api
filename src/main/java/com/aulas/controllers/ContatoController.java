@@ -3,11 +3,10 @@ package com.aulas.controllers;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +22,7 @@ import com.aulas.services.dto.ContatoDTO;
 
 @RestController
 @RequestMapping("/")
+@CrossOrigin(origins = "*")
 public class ContatoController {
 	@Autowired
 	ContatoService service;
@@ -31,8 +31,7 @@ public class ContatoController {
 	public String xpto() {
 		return "Index de contato";
 	}
-	
-	
+		
 	@GetMapping("/contatos/email/{email}")
 	public ResponseEntity<List<ContatoDTO>> getContatosPorEmail(@PathVariable("email") String email){
 		return ResponseEntity.ok(service.consultarContatoPorEmail(email));
